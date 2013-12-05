@@ -133,7 +133,7 @@
             // colProperty
             // 
             this.colProperty.Text = "Property";
-            this.colProperty.Width = 120;
+            this.colProperty.Width = 200;
             // 
             // colValue
             // 

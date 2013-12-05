@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Automation;
 
 namespace dotNetSpy
@@ -56,9 +57,20 @@ namespace dotNetSpy
                 result.Add("IsEnabled", _element.Current.IsEnabled.ToString());
                 result.Add("IsOffscreen", _element.Current.IsOffscreen.ToString());
 
+                Rect rect = _element.Current.BoundingRectangle;
+                result.Add("BoundingRectangle", String.Format("{0} x {1} [({2},{3}) - ({4},{5})]",
+                    rect.Width, rect.Height, rect.TopLeft.X, rect.TopLeft.Y, rect.BottomRight.X, rect.BottomRight.Y));
+
+                object p;
+                bool isValuePatternSupported = _element.TryGetCurrentPattern(ValuePattern.Pattern, out p);
+                if (isValuePatternSupported)
+                {
+                    ValuePattern valuePattern = p as ValuePattern;
+                    result.Add("Value", valuePattern.Current.Value);
+                }
+
                 // Supported patterns
                 result.Add("PATTERNS", "------------------------------------------");
-                object p;
                 result.Add("IsDockPatternSupported", _element.TryGetCurrentPattern(DockPattern.Pattern, out p).ToString());
                 result.Add("IsExpandCollapsePatternSupported", _element.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out p).ToString());
                 result.Add("IsGridItemPatternSupported", _element.TryGetCurrentPattern(GridItemPattern.Pattern, out p).ToString());
@@ -75,7 +87,7 @@ namespace dotNetSpy
                 result.Add("IsTextPatternSupported", _element.TryGetCurrentPattern(TextPattern.Pattern, out p).ToString());
                 result.Add("IsTogglePatternSupported", _element.TryGetCurrentPattern(TogglePattern.Pattern, out p).ToString());
                 result.Add("IsTransformPatternSupported", _element.TryGetCurrentPattern(TransformPattern.Pattern, out p).ToString());
-                result.Add("IsValuePatternSupported", _element.TryGetCurrentPattern(ValuePattern.Pattern, out p).ToString());
+                result.Add("IsValuePatternSupported", isValuePatternSupported.ToString());
                 result.Add("IsVirtualizedItemPatternSupported", _element.TryGetCurrentPattern(VirtualizedItemPattern.Pattern, out p).ToString());
                 result.Add("IsWindowPatternSupported", _element.TryGetCurrentPattern(WindowPattern.Pattern, out p).ToString());
             }
